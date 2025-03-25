@@ -4,10 +4,8 @@ import torch
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 
-# ─── Import your model class ────────────────────────────────────────────────────
 from model import EnhancedCNN
 
-# ─── Config ─────────────────────────────────────────────────────────────────────
 IMAGES_DIR = "images"
 CHECKPOINT = "model_checkpoint.pt"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -17,7 +15,6 @@ CLASS_NAMES = [
     "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"
 ]
 
-# ─── Preprocessing ──────────────────────────────────────────────────────────────
 transform = transforms.Compose([
     transforms.Grayscale(num_output_channels=1),
     transforms.Resize((28, 28)),
@@ -25,12 +22,10 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,), (0.5,))
 ])
 
-# ─── Load Model ─────────────────────────────────────────────────────────────────
 model = EnhancedCNN().to(DEVICE)
 model = torch.jit.load(CHECKPOINT, map_location=DEVICE)
 model.to(DEVICE).eval()
 
-# ─── Inference Loop ─────────────────────────────────────────────────────────────
 for filename in sorted(os.listdir(IMAGES_DIR)):
     if not filename.lower().endswith((".png", ".jpg")):
         continue
@@ -45,7 +40,6 @@ for filename in sorted(os.listdir(IMAGES_DIR)):
 
     print(f"{filename: <25} → {label}")
 
-    # Optional: display image with title
     plt.imshow(img, cmap="gray")
     plt.title(label)
     plt.axis("off")
